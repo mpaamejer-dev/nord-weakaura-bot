@@ -16,11 +16,26 @@ const client = new Client({
   intents: [GatewayIntentBits.Guilds],
 });
 
+function buildPanelRows() {
+  const row = new ActionRowBuilder().addComponents(
+    new ButtonBuilder()
+      .setCustomId('download_kara')
+      .setLabel('Kara')
+      .setStyle(ButtonStyle.Primary),
+    new ButtonBuilder()
+      .setCustomId('download_tier4')
+      .setLabel('Tier 4')
+      .setStyle(ButtonStyle.Primary)
+  );
+
+  return [row];
+}
+
 async function registerCommands() {
   const commands = [
     new SlashCommandBuilder()
-      .setName('raidpacks')
-      .setDescription('Post private WeakAura download buttons')
+      .setName('postraidpacks')
+      .setDescription('Post the raid pack panel as a bot message')
       .toJSON(),
   ];
 
@@ -44,7 +59,7 @@ client.once(Events.ClientReady, async () => {
   try {
     await registerCommands();
     console.log(`Logged in as ${client.user.tag}`);
-    console.log('Slash command /raidpacks registered.');
+    console.log('Slash command /postraidpacks registered.');
   } catch (error) {
     console.error('Failed to register commands:', error);
   }
@@ -53,22 +68,26 @@ client.once(Events.ClientReady, async () => {
 client.on(Events.InteractionCreate, async (interaction) => {
   try {
     if (interaction.isChatInputCommand()) {
-      if (interaction.commandName !== 'raidpacks') return;
+      if (interaction.commandName !== 'postraidpacks') return;
 
-      const row = new ActionRowBuilder().addComponents(
-        new ButtonBuilder()
-          .setCustomId('download_kara')
-          .setLabel('Kara')
-          .setStyle(ButtonStyle.Primary),
-        new ButtonBuilder()
-          .setCustomId('download_tier4')
-          .setLabel('Tier 4')
-          .setStyle(ButtonStyle.Primary)
-      );
+      const panelChannel = await client.channels.fetch(process.env.PANEL_CHANNEL_ID);
+
+      if (!panelChannel || !panelChannel.isTextBased()) {
+        await interaction.reply({
+          content: 'PANEL_CHANNEL_ID is invalid or not a text channel.',
+          ephemeral: true,
+        });
+        return;
+      }
+
+      await panelChannel.send({
+        content: 'Click the buttons below to download the Raid Pack WAs',
+        components: buildPanelRows(),
+      });
 
       await interaction.reply({
-        content: 'Click a button to get your private .txt file.',
-        components: [row],
+        content: 'Raid pack panel posted.',
+        ephemeral: true,
       });
 
       return;
