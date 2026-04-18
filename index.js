@@ -20,11 +20,11 @@ function buildPanelRows() {
   const row1 = new ActionRowBuilder().addComponents(
     new ButtonBuilder()
       .setCustomId('download_kara')
-      .setLabel('Kara')
+      .setLabel('Karazhan v1.0.8')
       .setStyle(ButtonStyle.Primary),
     new ButtonBuilder()
       .setCustomId('download_tier4')
-      .setLabel('Tier 4')
+      .setLabel('Tier 4 Raiding Pack v1.0.4')
       .setStyle(ButtonStyle.Primary)
   );
 
