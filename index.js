@@ -17,7 +17,7 @@ const client = new Client({
 });
 
 function buildPanelRows() {
-  const row = new ActionRowBuilder().addComponents(
+  const row1 = new ActionRowBuilder().addComponents(
     new ButtonBuilder()
       .setCustomId('download_kara')
       .setLabel('Kara')
@@ -28,11 +28,22 @@ function buildPanelRows() {
       .setStyle(ButtonStyle.Primary)
   );
 
-  return [row];
+  const row2 = new ActionRowBuilder().addComponents(
+    new ButtonBuilder()
+      .setCustomId('download_dungeon1')
+      .setLabel('Dungeon Pack 1/2')
+      .setStyle(ButtonStyle.Primary),
+    new ButtonBuilder()
+      .setCustomId('download_dungeon2')
+      .setLabel('Dungeon Pack 2/2')
+      .setStyle(ButtonStyle.Primary)
+  );
+
+  return [row1, row2];
 }
 
 function buildPanelContent() {
-  return '## Guide til Raid Packs\n\nFølg guiden herunder for at importere Fojji\'s Raid Packs.\n\n1. Importér [Fojji\'s Raid Pack Classic](https://wago.io/FojjiRaidAnchors-Classic).\n2. Download den nyeste version af [FojjiCore](https://www.curseforge.com/wow/addons/fojjicore).\n3. Tryk på en af knapperne herunder for at få vist WeakAura-koden.\n4. Hent hele filen via "•••", og vælg derefter "Download".\n5. Åbn filen i fx Notesblok, og kopiér indholdet ind i WeakAuras som import.\n6. Det kan tage et øjeblik, og spillet kan fryse. Det er normalt. Vent til importen er færdig.\n7. Reload spillet med `/reload`.\n8. Færdig.';
+  return '## Guide til Raid & Dungeon Packs\n\n### __Raid Packs__\nFølg disse trin for at installere Fojji Raid Packs.\n\n1. Importér [Fojji\\\'s Raid Pack Classic](https://wago.io/FojjiRaidAnchors-Classic).\n2. Download den nyeste version af [FojjiCore](https://www.curseforge.com/wow/addons/fojjicore).\n3. Tryk på en af knapperne herunder for at få vist WeakAura-koden.\n4. Hent hele filen via "•••" i pop-up-beskeden, og vælg derefter "Download".\n   - Du kan ikke importere koden direkte fra pop-up-beskeden. Filen skal downloades først.\n5. Åbn filen i fx Notesblok, og kopiér indholdet ind i WeakAuras som import.\n6. Det kan tage et øjeblik, og spillet kan fryse. Det er normalt. Vent, til importen er færdig.\n7. Reload spillet med `/reload`.\n8. Du er nu klar.\n\n### __Dungeon Packs__\nFølg samme fremgangsmåde som ovenfor, men importér også [FojjiAPI Role TBC](https://wago.io/FojjiAPIRoleTBC).\n\n*Skriv, hvis du har brug for hjælp.*';
 }
 
 async function registerCommands() {
@@ -143,6 +154,38 @@ client.on(Events.InteractionCreate, async (interaction) => {
             {
               attachment: fileBuffer,
               name: 'tier4.txt',
+            },
+          ],
+        });
+        return;
+      }
+
+      if (interaction.customId === 'download_dungeon1') {
+        const fileBuffer = await getFileBuffer('dungeon1.txt');
+
+        await interaction.reply({
+          content: 'Her er din Dungeon Pack 1/2 WeakAura-fil.',
+          ephemeral: true,
+          files: [
+            {
+              attachment: fileBuffer,
+              name: 'dungeon1.txt',
+            },
+          ],
+        });
+        return;
+      }
+
+      if (interaction.customId === 'download_dungeon2') {
+        const fileBuffer = await getFileBuffer('dungeon2.txt');
+
+        await interaction.reply({
+          content: 'Her er din Dungeon Pack 2/2 WeakAura-fil.',
+          ephemeral: true,
+          files: [
+            {
+              attachment: fileBuffer,
+              name: 'dungeon2.txt',
             },
           ],
         });
