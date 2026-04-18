@@ -31,11 +31,15 @@ function buildPanelRows() {
   return [row];
 }
 
+function buildPanelContent() {
+  return '## Guide til Raid Packs\n\nFølg guiden herunder for at importere Fojji\'s Raid Packs.\n\n1. Importér [Fojji\'s Raid Pack Classic](https://wago.io/FojjiRaidAnchors-Classic).\n2. Download den nyeste version af [FojjiCore](https://www.curseforge.com/wow/addons/fojjicore).\n3. Tryk på en af knapperne herunder for at få vist WeakAura-koden.\n4. Hent hele filen via "•••", og vælg derefter "Download".\n5. Åbn filen i fx Notesblok, og kopiér indholdet ind i WeakAuras som import.\n6. Det kan tage et øjeblik, og spillet kan fryse. Det er normalt. Vent til importen er færdig.\n7. Reload spillet med `/reload`.\n8. Færdig.';
+}
+
 async function registerCommands() {
   const commands = [
     new SlashCommandBuilder()
       .setName('postraidpacks')
-      .setDescription('Post the raid pack panel as a bot message')
+      .setDescription('Create or update the raid pack panel')
       .toJSON(),
   ];
 
@@ -55,6 +59,38 @@ async function getFileBuffer(fileName) {
   return fs.readFile(filePath);
 }
 
+async function createOrUpdatePanel() {
+  const panelChannel = await client.channels.fetch(process.env.PANEL_CHANNEL_ID);
+
+  if (!panelChannel || !panelChannel.isTextBased()) {
+    throw new Error('PANEL_CHANNEL_ID is invalid or not a text channel.');
+  }
+
+  const payload = {
+    content: buildPanelContent(),
+    components: buildPanelRows(),
+  };
+
+  const panelMessageId = process.env.PANEL_MESSAGE_ID;
+
+  if (!panelMessageId) {
+    const newMessage = await panelChannel.send(payload);
+    console.log(`Created panel message. PANEL_MESSAGE_ID=${newMessage.id}`);
+    return { action: 'created', messageId: newMessage.id };
+  }
+
+  try {
+    const existingMessage = await panelChannel.messages.fetch(panelMessageId);
+    await existingMessage.edit(payload);
+    console.log(`Updated panel message. PANEL_MESSAGE_ID=${existingMessage.id}`);
+    return { action: 'updated', messageId: existingMessage.id };
+  } catch (error) {
+    const newMessage = await panelChannel.send(payload);
+    console.log(`Old panel not found. Created new panel message. PANEL_MESSAGE_ID=${newMessage.id}`);
+    return { action: 'created', messageId: newMessage.id };
+  }
+}
+
 client.once(Events.ClientReady, async () => {
   try {
     await registerCommands();
@@ -70,23 +106,10 @@ client.on(Events.InteractionCreate, async (interaction) => {
     if (interaction.isChatInputCommand()) {
       if (interaction.commandName !== 'postraidpacks') return;
 
-      const panelChannel = await client.channels.fetch(process.env.PANEL_CHANNEL_ID);
-
-      if (!panelChannel || !panelChannel.isTextBased()) {
-        await interaction.reply({
-          content: 'PANEL_CHANNEL_ID is invalid or not a text channel.',
-          ephemeral: true,
-        });
-        return;
-      }
-
-      await panelChannel.send({
-        content: '## Guide til Raid Packs\n\nFølg guiden herunder for at importere Fojji\'s Raid Packs.\n\n1. Importér [Fojji\'s Raid Pack Classic](https://wago.io/FojjiRaidAnchors-Classic).\n2. Download den nyeste version af [FojjiCore](https://www.curseforge.com/wow/addons/fojjicore).\n3. Tryk på en af knapperne herunder for at få vist WeakAura-koden.\n4. Hent hele filen via "•••", og vælg derefter "Download".\n5. Åbn filen i fx Notesblok, og kopiér indholdet ind i WeakAuras som import.\n6. Det kan tage et øjeblik, og spillet kan fryse. Det er normalt. Vent til importen er færdig.\n7. Reload spillet med `/reload`.\n8. Færdig.',
-        components: buildPanelRows(),
-      });
+      const result = await createOrUpdatePanel();
 
       await interaction.reply({
-        content: 'Raid pack panel posted.',
+        content: `Raid pack panel ${result.action}.`,
         ephemeral: true,
       });
 
