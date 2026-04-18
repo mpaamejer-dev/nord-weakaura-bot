@@ -81,7 +81,7 @@ client.on(Events.InteractionCreate, async (interaction) => {
       }
 
       await panelChannel.send({
-        content: 'Click the buttons below to download the Raid Pack WAs',
+        content: '## Klik på knapperne herunder for at downloade Raid Pack WAs og få vist WA-filerne i .txt-format.',
         components: buildPanelRows(),
       });
 
@@ -98,7 +98,7 @@ client.on(Events.InteractionCreate, async (interaction) => {
         const fileBuffer = await getFileBuffer('kara.txt');
 
         await interaction.reply({
-          content: 'Here is your Kara WeakAura file.',
+          content: 'Her er din Kara WeakAura-fil.',
           ephemeral: true,
           files: [
             {
@@ -114,7 +114,7 @@ client.on(Events.InteractionCreate, async (interaction) => {
         const fileBuffer = await getFileBuffer('tier4.txt');
 
         await interaction.reply({
-          content: 'Here is your Tier 4 WeakAura file.',
+          content: 'Her er din Tier 4 WeakAura-fil.',
           ephemeral: true,
           files: [
             {
@@ -127,7 +127,7 @@ client.on(Events.InteractionCreate, async (interaction) => {
       }
 
       await interaction.reply({
-        content: 'Unknown button.',
+        content: 'Ukendt knap.',
         ephemeral: true,
       });
     }
@@ -136,7 +136,7 @@ client.on(Events.InteractionCreate, async (interaction) => {
 
     if (interaction.isRepliable() && !interaction.replied && !interaction.deferred) {
       await interaction.reply({
-        content: 'Something went wrong.',
+        content: 'Noget gik galt.',
         ephemeral: true,
       });
     }
