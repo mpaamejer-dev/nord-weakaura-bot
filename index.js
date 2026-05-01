@@ -30,6 +30,17 @@ function buildPanelRows() {
 
   const row2 = new ActionRowBuilder().addComponents(
     new ButtonBuilder()
+      .setCustomId('download_tier5_ptr')
+      .setLabel('Tier 5 Raiding Pack (PTR)')
+      .setStyle(ButtonStyle.Primary),
+    new ButtonBuilder()
+      .setCustomId('download_tier5_frames_ptr')
+      .setLabel('Tier 5 Raid Frames (PTR)')
+      .setStyle(ButtonStyle.Primary)
+  );
+
+  const row3 = new ActionRowBuilder().addComponents(
+    new ButtonBuilder()
       .setCustomId('download_dungeon1')
       .setLabel('Dungeon Pack 1/2')
       .setStyle(ButtonStyle.Primary),
@@ -39,7 +50,7 @@ function buildPanelRows() {
       .setStyle(ButtonStyle.Primary)
   );
 
-  return [row1, row2];
+  return [row1, row2, row3];
 }
 
 function buildPanelContent() {
@@ -154,6 +165,38 @@ client.on(Events.InteractionCreate, async (interaction) => {
             {
               attachment: fileBuffer,
               name: 'tier4.txt',
+            },
+          ],
+        });
+        return;
+      }
+
+      if (interaction.customId === 'download_tier5_ptr') {
+        const fileBuffer = await getFileBuffer('tier5-ptr-test.txt');
+
+        await interaction.reply({
+          content: 'Her er din Tier 5 Raiding Pack PTR WeakAura-fil.',
+          ephemeral: true,
+          files: [
+            {
+              attachment: fileBuffer,
+              name: 'tier5-ptr-test.txt',
+            },
+          ],
+        });
+        return;
+      }
+
+      if (interaction.customId === 'download_tier5_frames_ptr') {
+        const fileBuffer = await getFileBuffer('tier5-ptr-frames-test.txt');
+
+        await interaction.reply({
+          content: 'Her er din Tier 5 Raid Frames PTR WeakAura-fil.',
+          ephemeral: true,
+          files: [
+            {
+              attachment: fileBuffer,
+              name: 'tier5-ptr-frames-test.txt',
             },
           ],
         });
