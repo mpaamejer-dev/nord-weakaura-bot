@@ -30,12 +30,12 @@ function buildPanelRows() {
 
   const row2 = new ActionRowBuilder().addComponents(
     new ButtonBuilder()
-      .setCustomId('download_tier5_ptr')
-      .setLabel('Tier 5 Raiding Pack (PTR)')
+      .setCustomId('download_tier5')
+      .setLabel('Tier 5 Raiding Pack v2.0.0')
       .setStyle(ButtonStyle.Primary),
     new ButtonBuilder()
-      .setCustomId('download_tier5_frames_ptr')
-      .setLabel('Tier 5 Raid Frames (PTR)')
+      .setCustomId('download_tier5_frames')
+      .setLabel('Tier 5 Raid Frames v2.0.0')
       .setStyle(ButtonStyle.Primary)
   );
 
@@ -171,32 +171,32 @@ client.on(Events.InteractionCreate, async (interaction) => {
         return;
       }
 
-      if (interaction.customId === 'download_tier5_ptr') {
-        const fileBuffer = await getFileBuffer('tier5-ptr-test.txt');
+      if (interaction.customId === 'download_tier5') {
+        const fileBuffer = await getFileBuffer('tier5-raid-pack.txt');
 
         await interaction.reply({
-          content: 'Her er din Tier 5 Raiding Pack PTR WeakAura-fil.',
+          content: 'Her er din Tier 5 Raiding Pack WeakAura-fil.',
           ephemeral: true,
           files: [
             {
               attachment: fileBuffer,
-              name: 'tier5-ptr-test.txt',
+              name: 'tier5-raid-pack.txt',
             },
           ],
         });
         return;
       }
 
-      if (interaction.customId === 'download_tier5_frames_ptr') {
-        const fileBuffer = await getFileBuffer('tier5-ptr-frames-test.txt');
+      if (interaction.customId === 'download_tier5_frames') {
+        const fileBuffer = await getFileBuffer('tier5-raid-frames.txt');
 
         await interaction.reply({
-          content: 'Her er din Tier 5 Raid Frames PTR WeakAura-fil.',
+          content: 'Her er din Tier 5 Raid Frames WeakAura-fil.',
           ephemeral: true,
           files: [
             {
               attachment: fileBuffer,
-              name: 'tier5-ptr-frames-test.txt',
+              name: 'tier5-raid-frames.txt',
             },
           ],
         });
