@@ -131,8 +131,11 @@ async function createOrUpdatePanel() {
   }
 
   const payload = {
-    content: buildPanelContent(),
+    content: `@everyone\n\n${buildPanelContent()}`,
     components: buildPanelRows(),
+    allowedMentions: {
+      parse: ['everyone'],
+    },
   };
 
   const panelMessageId = process.env.PANEL_MESSAGE_ID;
