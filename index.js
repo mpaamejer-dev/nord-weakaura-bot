@@ -20,17 +20,17 @@ function buildPanelRows() {
   const row1 = new ActionRowBuilder().addComponents(
     new ButtonBuilder()
       .setCustomId('download_hyjal')
-      .setLabel('Hyjal v1.14')
+      .setLabel('Hyjal v1.1.8')
       .setStyle(ButtonStyle.Danger),
 
     new ButtonBuilder()
       .setCustomId('download_bt_part1')
-      .setLabel('BT - 1/2 - v1.1.3')
+      .setLabel('BT - 1/2 - v1.2.3')
       .setStyle(ButtonStyle.Danger),
 
     new ButtonBuilder()
       .setCustomId('download_bt_part2')
-      .setLabel('BT - 2/2 - v1.1.4')
+      .setLabel('BT - 2/2 - v1.2.3')
       .setStyle(ButtonStyle.Danger)
   );
 
